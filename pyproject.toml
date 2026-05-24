@@ -1,0 +1,49 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "omnicam"
+version = "0.1.2"
+description = "A Python package for camera utilities"
+readme = "README.md"
+license = { file = "LICENSE" }
+authors = [
+    { name = "OguzhanUmutlu", email = "contact@oguzhanumutlu.com" }
+]
+requires-python = ">=3.8"
+dependencies = [
+    "numpy>=1.21"
+]
+keywords = ["camera", "opencv", "vision", "stream", "capture"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Multimedia :: Video",
+    "Topic :: Software Development :: Libraries",
+]
+
+[project.optional-dependencies]
+opencv = ["opencv-python>=4.7"]
+screen = ["mss>=9.0"]
+pi = ["picamera2>=0.3"]
+dev = ["pytest>=7.0"]
+
+[project.urls]
+Homepage = "https://github.com/OguzhanUmutlu/omnicam"
+Issues = "https://github.com/OguzhanUmutlu/omnicam/issues"
+Documentation = "https://github.com/OguzhanUmutlu/omnicam#readme"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
