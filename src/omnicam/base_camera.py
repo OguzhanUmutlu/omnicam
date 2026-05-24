@@ -1,5 +1,5 @@
 from abc import abstractmethod, ABC
-from typing import Optional, Literal
+from typing import Optional, Literal, Tuple
 
 import numpy as np
 
@@ -21,9 +21,9 @@ class CameraInfo:
             self,
             name: str,
             short_name: str,
-            focal_length_mm: tuple[float, float],
+            focal_length_mm: Tuple[float, float],
             pixel_size_um: float,
-            max_resolution: tuple[int, int],
+            max_resolution: Tuple[int, int],
             aperture_f: float,
             hfov_deg: float,
             focus_type: Literal["Fixed", "Autofocus", "Manual", "Unknown"],
@@ -42,15 +42,15 @@ class CameraInfo:
         pixel_size_mm = self.pixel_size_um / 1000.0
         self.base_focal_length = (self.focal_length_mm[0] / pixel_size_mm, self.focal_length_mm[1] / pixel_size_mm)
 
-    def focal_length(self, resolution: tuple[int, int]):
+    def focal_length(self, resolution: Tuple[int, int]):
         return (
             self.base_focal_length[0] * resolution[0] / self.max_resolution[0],
             self.base_focal_length[1] * resolution[1] / self.max_resolution[1]
         )
 
     @staticmethod
-    def from_focal_length(name: str, short_name: str, focal_length: tuple[float, float],
-                          resolution: tuple[int, int] = (9999, 9999)):
+    def from_focal_length(name: str, short_name: str, focal_length: Tuple[float, float],
+                          resolution: Tuple[int, int] = (9999, 9999)):
         pixel_size_mm = 0.001
         focal_length_mm = (focal_length[0] * pixel_size_mm, focal_length[1] * pixel_size_mm)
         return CameraInfo(
@@ -88,10 +88,10 @@ class BaseCamera(ABC):
         raise NotImplementedError("release method must be implemented by subclass")
 
     @abstractmethod
-    def _size(self) -> tuple[int, int]:
+    def _size(self) -> Tuple[int, int]:
         raise NotImplementedError("size method must be implemented by subclass")
 
-    def _focus(self, rectangle: tuple[int, int, int, int]):
+    def _focus(self, rectangle: Tuple[int, int, int, int]):
         raise NotImplementedError("focus method must be implemented by subclass")
 
     def open(self):
@@ -103,7 +103,7 @@ class BaseCamera(ABC):
     def size(self):
         return self._size()
 
-    def focus(self, rectangle: tuple[int, int, int, int]):
+    def focus(self, rectangle: Tuple[int, int, int, int]):
         if self.closed:
             raise PermissionError("Attempted to focus a closed camera.")
         if self.info is not None and self.info.focus_type in ("Fixed", "Unknown"):
@@ -111,7 +111,7 @@ class BaseCamera(ABC):
         self._focus(rectangle)
         return self
 
-    def focal_length(self) -> tuple[float, float]:
+    def focal_length(self) -> Tuple[float, float]:
         if self.info is None:
             raise ValueError("CameraInfo must be provided to calculate focal length")
         return self.info.focal_length(self.size())

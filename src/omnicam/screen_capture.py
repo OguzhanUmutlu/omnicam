@@ -1,3 +1,5 @@
+from typing import Optional, Tuple
+
 import numpy as np
 
 from .base_camera import BaseCamera
@@ -6,7 +8,7 @@ from .base_camera import BaseCamera
 class ScreenCapture(BaseCamera):
     # region: {"top": int, "left": int, "width": int, "height": int}
     def __init__(self, index=1, region: "dict[str, int] | None" = None,
-                 focal_length: "tuple[float, float] | None" = None):
+                 focal_length: Optional[Tuple[float, float]] = None):
         try:
             import mss
             self.mss = mss

@@ -1,5 +1,6 @@
 import sys
 import types
+from typing import Tuple
 
 import numpy as np
 import pytest
@@ -90,7 +91,7 @@ class DummyCamera(BaseCamera):
     def _size(self):
         return self._size_value
 
-    def _focus(self, rectangle: tuple[int, int, int, int]):
+    def _focus(self, rectangle: Tuple[int, int, int, int]):
         self.focus_calls.append(rectangle)
 
 

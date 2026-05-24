@@ -1,4 +1,4 @@
-from typing import Union
+from typing import Union, Tuple
 
 from .base_camera import BaseCamera, resolutions, CameraInfo
 
@@ -97,7 +97,7 @@ class PiCamera(BaseCamera):
         rpi_cameras[cam_info.name] = cam_info
         rpi_cameras[cam_info.short_name] = cam_info
 
-    def __init__(self, model: Union[str, CameraInfo], resolution: "tuple[int, int] | str" = "720p"):
+    def __init__(self, model: Union[str, CameraInfo], resolution: Union[Tuple[int, int], str] = "720p"):
         super().__init__()
         if not isinstance(model, CameraInfo):
             if model not in PiCamera.rpi_cameras:
