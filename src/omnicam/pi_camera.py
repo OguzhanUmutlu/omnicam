@@ -98,7 +98,6 @@ class PiCamera(BaseCamera):
         rpi_cameras[cam_info.short_name] = cam_info
 
     def __init__(self, model: Union[str, CameraInfo], resolution: Union[Tuple[int, int], str] = "720p", open=True):
-        super().__init__(open=open)
         if not isinstance(model, CameraInfo):
             if model not in PiCamera.rpi_cameras:
                 raise ValueError(f"Unsupported: {model}. Supported models: {', '.join(PiCamera.rpi_cameras.keys())}")
@@ -110,6 +109,7 @@ class PiCamera(BaseCamera):
             resolution = resolutions[resolution]
         self.resolution = resolution
         self.model = model
+        super().__init__(open=open)
 
     def _open(self):
         try:

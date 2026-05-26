@@ -5,8 +5,8 @@ from .base_camera import BaseCamera
 
 class ReadonlyCamera(BaseCamera):
     def __init__(self, cam: BaseCamera):
-        super().__init__()
         self.cam = cam
+        super().__init__()
 
     def _open(self):
         pass

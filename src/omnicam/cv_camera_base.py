@@ -11,7 +11,6 @@ class CVCameraBase(BaseCamera):
             raise ImportError(
                 "OpenCV is required for this feature. Install with 'pip install omnicam[opencv]'.") from exc
         self._cv2 = cv2
-        super().__init__(open=open, info=info)
         self.open_error = open_error or RuntimeError(f"Camera could not be opened with args {args}")
         self.timeout_error = timeout_error or TimeoutError(
             f"Failed to open camera with args {args} within {timeout} seconds")
@@ -20,6 +19,7 @@ class CVCameraBase(BaseCamera):
         self.cam = None
         self._frame_size = None
         self.timeout = timeout
+        super().__init__(open=open, info=info)
 
     def _open(self):
         self.cam = self._cv2.VideoCapture(*self.cv_args, **self.cv_kwargs)

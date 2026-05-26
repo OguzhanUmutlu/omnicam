@@ -14,10 +14,10 @@ class ScreenCapture(BaseCamera):
             self.mss = mss
         except Exception as e:
             raise ImportError("mss is required for this feature. Install with 'pip install omnicam[screen]'.") from e
-        super().__init__(open=open)
         self.index = index
         self.region = region
         self._focal_length = focal_length
+        super().__init__(open=open)
 
     def _open(self):
         self.cap = self.mss.mss()
