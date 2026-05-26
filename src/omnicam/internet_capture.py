@@ -1,9 +1,11 @@
-from .base_camera import CameraInfo
+from typing import Union
+
+from .base_camera import CameraInfo, BaseCamera
 from .cv_camera_base import CVCameraBase
 
 
 class InternetCapture(CVCameraBase):
-    def __init__(self, url: str, timeout=5, open=True, info: CameraInfo = None, args: list = None,
+    def __init__(self, url: str, timeout=5, open=True, info: Union[CameraInfo, BaseCamera] = None, args: list = None,
                  open_error=None, timeout_error=None):
         if not url.startswith("http://") and not url.startswith("https://") and not url.startswith("rtsp://"):
             url = "http://" + url

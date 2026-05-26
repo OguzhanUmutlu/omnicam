@@ -1,10 +1,11 @@
+from typing import Union
+
 from .base_camera import BaseCamera, CameraInfo
 
 
 class CVCameraBase(BaseCamera):
-    def __init__(self, args: list, timeout=None, open=True, info: CameraInfo = None, open_error=None,
-                 timeout_error=None,
-                 **kwargs):
+    def __init__(self, args: list, timeout=None, open=True, info: Union[CameraInfo, BaseCamera] = None, open_error=None,
+                 timeout_error=None, **kwargs):
         try:
             import cv2
         except Exception as exc:

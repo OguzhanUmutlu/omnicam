@@ -97,19 +97,20 @@ class PiCamera(BaseCamera):
         rpi_cameras[cam_info.name] = cam_info
         rpi_cameras[cam_info.short_name] = cam_info
 
-    def __init__(self, model: Union[str, CameraInfo], resolution: Union[Tuple[int, int], str] = "720p", open=True):
-        if not isinstance(model, CameraInfo):
-            if model not in PiCamera.rpi_cameras:
-                raise ValueError(f"Unsupported: {model}. Supported models: {', '.join(PiCamera.rpi_cameras.keys())}")
+    def __init__(self, info: Union[str, CameraInfo, BaseCamera], resolution: Union[Tuple[int, int], str] = "720p", open=True):
+        if isinstance(info, BaseCamera):
+            info = info.info
+        if not isinstance(info, CameraInfo):
+            if info not in PiCamera.rpi_cameras:
+                raise ValueError(f"Unsupported: {info}. Supported models: {', '.join(PiCamera.rpi_cameras.keys())}")
             if isinstance(resolution, str) and resolution not in resolutions and resolution not in resolutions.values():
                 raise ValueError(
                     f"Unsupported resolution: {resolution}. Supported resolutions: {', '.join(str(r) for r in resolutions.values())}")
-            model = PiCamera.rpi_cameras[model]
+            info = PiCamera.rpi_cameras[info]
         if isinstance(resolution, str):
             resolution = resolutions[resolution]
         self.resolution = resolution
-        self.model: CameraInfo = model
-        super().__init__(open=open)
+        super().__init__(open=open, info=info)
 
     def _open(self):
         try:

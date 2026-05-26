@@ -1,12 +1,13 @@
 import subprocess
+from typing import Union
 
-from .base_camera import CameraInfo
+from .base_camera import CameraInfo, BaseCamera
 from .gstreamer_capture import GStreamerCapture
 
 
 class GazeboCamera(GStreamerCapture):
-    def __init__(self, port=4000, topic_name: str = None, timeout=5, open=True, info: CameraInfo = None,
-                 open_error=None, timeout_error=None):
+    def __init__(self, port=4000, topic_name: str = None, timeout=5, open=True,
+                 info: Union[CameraInfo, BaseCamera] = None, open_error=None, timeout_error=None):
         self.topic_name = topic_name
         self.port = port
         super().__init__(

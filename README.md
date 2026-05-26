@@ -55,7 +55,7 @@ cam = ScreenCapture(index=1)
 ```python
 from omnicam import PiCamera
 
-cam = PiCamera(model="IMX219", resolution="720p")
+cam = PiCamera(info="IMX219", resolution="720p")
 ```
 
 ## GStreamer and Gazebo

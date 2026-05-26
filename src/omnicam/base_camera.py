@@ -1,5 +1,5 @@
 from abc import abstractmethod, ABC
-from typing import Optional, Literal, Tuple
+from typing import Literal, Tuple, Union
 
 import numpy as np
 
@@ -67,13 +67,15 @@ class CameraInfo:
 
 
 class BaseCamera(ABC):
-    def __init__(self, info: Optional[CameraInfo] = None, open=True):
+    def __init__(self, info: Union[CameraInfo, "BaseCamera"] = None, open=True):
         self.closed = False
         self.roll_deg = 0.0
         self.pitch_deg = 0.0
         self.yaw_deg = 0.0
         self.offset = np.array([0.0, 0.0, -0.1], dtype=np.float64)
         self.info = info
+        if isinstance(info, BaseCamera):
+            self.info = info.info
 
         if open:
             self.open()
