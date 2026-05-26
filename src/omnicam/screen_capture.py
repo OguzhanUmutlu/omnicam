@@ -7,14 +7,14 @@ from .base_camera import BaseCamera
 
 class ScreenCapture(BaseCamera):
     # region: {"top": int, "left": int, "width": int, "height": int}
-    def __init__(self, index=1, region: "dict[str, int] | None" = None,
+    def __init__(self, index=1, region: "dict[str, int] | None" = None, open=True,
                  focal_length: Optional[Tuple[float, float]] = None):
         try:
             import mss
             self.mss = mss
         except Exception as e:
             raise ImportError("mss is required for this feature. Install with 'pip install omnicam[screen]'.") from e
-        super().__init__()
+        super().__init__(open=open)
         self.index = index
         self.region = region
         self._focal_length = focal_length

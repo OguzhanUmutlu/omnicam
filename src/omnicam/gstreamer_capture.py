@@ -23,7 +23,8 @@ class GStreamerCapture(CVCameraBase):
         def __str__(self):
             return " ! ".join(self.elements)
 
-    def __init__(self, gstreamer_string: "GstPipeline | str", timeout=5, info: CameraInfo = None, open_error=None,
+    def __init__(self, gstreamer_string: "GstPipeline | str", timeout=5, open=True, info: CameraInfo = None,
+                 open_error=None,
                  timeout_error=None):
         try:
             import cv2
@@ -35,7 +36,7 @@ class GStreamerCapture(CVCameraBase):
         self.gstreamer_string = gstreamer_string
         super().__init__(
             [gstreamer_string, cv2.CAP_GSTREAMER],
-            timeout=timeout, info=info,
+            timeout=timeout, open=open, info=info,
             open_error=open_error or RuntimeError(f"Could not open GStreamer stream with \"{gstreamer_string}\""),
             timeout_error=timeout_error or TimeoutError(
                 f"Could not open GStreamer stream with \"{gstreamer_string}\" within {timeout} seconds")

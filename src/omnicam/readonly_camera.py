@@ -9,7 +9,7 @@ class ReadonlyCamera(BaseCamera):
         self.cam = cam
 
     def _open(self):
-        self.cam._open()
+        pass
 
     def _read(self):
         return self.cam._read()

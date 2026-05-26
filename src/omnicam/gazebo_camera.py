@@ -5,8 +5,8 @@ from .gstreamer_capture import GStreamerCapture
 
 
 class GazeboCamera(GStreamerCapture):
-    def __init__(self, port=4000, topic_name: str = None, timeout=5, info: CameraInfo = None, open_error=None,
-                 timeout_error=None):
+    def __init__(self, port=4000, topic_name: str = None, timeout=5, open=True, info: CameraInfo = None,
+                 open_error=None, timeout_error=None):
         self.topic_name = topic_name
         self.port = port
         super().__init__(
@@ -18,7 +18,7 @@ class GazeboCamera(GStreamerCapture):
             .add("avdec_h264")
             .add("videoconvert")
             .add("appsink", sync="false"),
-            timeout=timeout, info=info,
+            timeout=timeout, open=open, info=info,
             open_error=open_error or ValueError(f"Could not open Gazebo camera stream on port {self.port}"),
             timeout_error=timeout_error or TimeoutError(
                 f"Could not open Gazebo camera stream on port {self.port} within {timeout} seconds")

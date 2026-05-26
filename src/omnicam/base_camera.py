@@ -67,13 +67,16 @@ class CameraInfo:
 
 
 class BaseCamera(ABC):
-    def __init__(self, info: Optional[CameraInfo] = None):
+    def __init__(self, info: Optional[CameraInfo] = None, open=True):
         self.closed = False
         self.roll_deg = 0.0
         self.pitch_deg = 0.0
         self.yaw_deg = 0.0
         self.offset = np.array([0.0, 0.0, -0.1], dtype=np.float64)
         self.info = info
+
+        if open:
+            self.open()
 
     @abstractmethod
     def _open(self):

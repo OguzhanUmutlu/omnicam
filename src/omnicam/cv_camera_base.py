@@ -2,9 +2,10 @@ from .base_camera import BaseCamera, CameraInfo
 
 
 class CVCameraBase(BaseCamera):
-    def __init__(self, args: list, timeout=None, info: CameraInfo = None, open_error=None, timeout_error=None,
+    def __init__(self, args: list, timeout=None, open=True, info: CameraInfo = None, open_error=None,
+                 timeout_error=None,
                  **kwargs):
-        super().__init__(info=info)
+        super().__init__(open=open, info=info)
         try:
             import cv2
         except Exception as exc:
