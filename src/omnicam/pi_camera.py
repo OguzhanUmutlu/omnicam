@@ -108,7 +108,7 @@ class PiCamera(BaseCamera):
         if isinstance(resolution, str):
             resolution = resolutions[resolution]
         self.resolution = resolution
-        self.model = model
+        self.model: CameraInfo = model
         super().__init__(open=open)
 
     def _open(self):

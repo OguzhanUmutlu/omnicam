@@ -1,6 +1,6 @@
 from importlib.metadata import PackageNotFoundError, version
 
-from .base_camera import BaseCamera
+from .base_camera import BaseCamera, CameraInfo
 from .cv_camera_base import CVCameraBase
 from .file_capture import FileCapture
 from .gazebo_camera import GazeboCamera
@@ -18,6 +18,7 @@ except PackageNotFoundError:
 
 __all__ = [
     "BaseCamera",
+    "CameraInfo",
     "CVCameraBase",
     "FileCapture",
     "GazeboCamera",
