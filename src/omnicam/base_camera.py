@@ -97,7 +97,7 @@ class CameraInfo:
 
 class BaseCamera(ABC):
     def __init__(self, info: "CameraInfo | BaseCamera | None" = None, open=True):
-        self.closed = False
+        self.closed = True
         self.roll_deg = 0.0
         self.pitch_deg = 0.0
         self.yaw_deg = 0.0
