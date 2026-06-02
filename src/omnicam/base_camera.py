@@ -1,6 +1,6 @@
 from abc import abstractmethod, ABC
 from collections.abc import Callable
-from math import radians, cos, sin, sqrt
+from math import radians, cos, sin, sqrt, atan
 from typing import Sequence, Optional
 
 import numpy as np
@@ -117,9 +117,10 @@ class CameraInfo:
         return resolution in self._resolutions
 
     def focal_length(self, resolution: tuple[int, int]):
+        scale = max(resolution[0] / self.max_resolution[0], resolution[1] / self.max_resolution[1])
         return (
-            self.base_focal_length_px[0] * resolution[0] / self.max_resolution[0],
-            self.base_focal_length_px[1] * resolution[1] / self.max_resolution[1]
+            self.base_focal_length_px[0] * scale,
+            self.base_focal_length_px[1] * scale
         )
 
     def update_rate(self, camera: "BaseCamera | None" = None) -> float:
@@ -233,7 +234,9 @@ class BaseCamera(ABC):
 
     @property
     def horizontal_fov(self):
-        return radians(self.info.hfov_deg) if self.info is not None else 0.0
+        if self.fx == 0:
+            return 0.0
+        return 2.0 * atan(self.width / (2.0 * self.fx))
 
     def read(self):
         if self.closed:
