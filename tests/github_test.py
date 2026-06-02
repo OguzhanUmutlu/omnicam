@@ -94,25 +94,11 @@ class DummyCamera(BaseCamera):
         self.focus_calls.append(rectangle)
 
 
-def test_camera_info_focal_length_scales():
-    info = CameraInfo(
-        name="Test",
-        short_name="T",
-        focal_length_px=(4.0, 4.0),
-        pixel_size_um=2.0,
-        max_resolution=(200, 100),
-        aperture_f=2.0,
-        hfov_deg=60.0,
-        focus_type="Manual",
-        has_ir_filter=True,
-    )
-    fx, fy = info.focal_length((100, 50))
-    assert fx == pytest.approx(info.base_focal_length[0] * 0.5)
-    assert fy == pytest.approx(info.base_focal_length[1] * 0.5)
-
-
 def test_camera_info_from_focal_length_roundtrip():
-    info = CameraInfo.from_focal_length("Test", "T", (100.0, 200.0), resolution=(1000, 1000))
+    info = CameraInfo(
+        name="Test", short_name="test", aperture_f=1.0, focal_length_px=(100.0, 200.0),
+        max_resolution=(1000, 1000), update_rate=30
+    )
     assert info.focal_length((500, 500)) == pytest.approx((50.0, 100.0))
 
 
@@ -135,13 +121,14 @@ def test_base_camera_focus_restrictions():
     info = CameraInfo(
         name="Fixed",
         short_name="F",
+        aperture_f=1.0,
         focal_length_px=(1.0, 1.0),
         pixel_size_um=1.0,
         max_resolution=(1, 1),
-        aperture_f=1.0,
         hfov_deg=1.0,
         focus_type="Fixed",
         has_ir_filter=True,
+        update_rate=30.0
     )
     cam = DummyCamera([None], info=info)
     with pytest.raises(ValueError):

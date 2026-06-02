@@ -75,6 +75,44 @@ cam = GStreamerCapture(pipeline)
 cam = GazeboCamera(topic_name="my_camera")
 ```
 
+## BaseCamera geometry helper
+
+All cameras implement `project_pixel_to_ground` for projecting a pixel to ground coordinates.
+
+Usage example:
+
+```python
+from omnicam import SimpleCamera
+
+with SimpleCamera(index=0) as cam:
+    north_m, east_m = cam.project_pixel_to_ground(
+        px=640,
+        py=360,
+        alt_m=120.0,
+        roll=0.0,
+        pitch=0.0,
+        yaw=0.0,
+    )
+    print(north_m, east_m)
+```
+
+Notes:
+
+- `roll`, `pitch`, `yaw`, and `alt_m` are for the body frame the camera is attached to.
+- The camera's offset and offset rotation are applied when projecting:
+  - `offset`: `[x_right, y_down, z_forward]` in meters (optical frame)
+  - `offset_roll`, `offset_pitch`, `offset_yaw`: radians
+
+Parameters:
+
+- `px`, `py`: Pixel coordinates in the image.
+- `alt_m`: Camera altitude in meters.
+- `roll`, `pitch`, `yaw`: Camera attitude in radians.
+
+Returns:
+
+- `(north_m, east_m)`: Ground offset in meters relative to the camera.
+
 ## CameraInfo (advanced)
 
 `CameraInfo` describes physical camera parameters and enables focal-length math
@@ -82,6 +120,7 @@ and focus validation. It is optional but useful when you need real-world camera
 intrinsics.
 
 Fields:
+
 - `name`: Full model name.
 - `short_name`: Short identifier (sensor/model code).
 - `focal_length_mm`: `(fx_mm, fy_mm)` in millimeters.
@@ -119,15 +158,18 @@ If you only know focal length in pixel units, use:
 ```python
 from omnicam.base_camera import CameraInfo
 
-info = CameraInfo.from_focal_length(
+info = CameraInfo(
     name="Synthetic",
     short_name="SYN",
-    focal_length=(800.0, 800.0),
-    resolution=(1280, 720),
+    aperture_f=1.0,
+    focal_length_px=(800.0, 800.0),
+    max_resolution=(1280, 720),
+    update_rate=60.0
 )
 ```
 
 Default Raspberry Pi cameras (short name → full name):
+
 - `OV5647` → `Camera Module 1`
 - `OV5647 NoIR` → `Camera Module 1 NoIR`
 - `IMX219` → `Camera Module 2`

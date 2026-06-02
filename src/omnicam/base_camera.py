@@ -1,6 +1,6 @@
 from abc import abstractmethod, ABC
 from collections.abc import Callable
-from math import radians
+from math import radians, cos, sin, sqrt
 from typing import Sequence, Optional
 
 import numpy as np
@@ -34,15 +34,27 @@ def calc_focal_length_px(focal_length_mm: "tuple[float, float] | float", pixel_s
     return focal_length_mm[0] / pixel_size_mm, focal_length_mm[1] / pixel_size_mm
 
 
+def _rot_matrix(roll, pitch, yaw):
+    cr, sr = cos(roll), sin(roll)
+    cp, sp = cos(pitch), sin(pitch)
+    cy, sy = cos(yaw), sin(yaw)
+
+    return np.array([
+        [cy * cp, cy * sp * sr - sy * cr, cy * sp * cr + sy * sr],
+        [sy * cp, sy * sp * sr + cy * cr, sy * sp * cr - cy * sr],
+        [-sp, cp * sr, cp * cr]
+    ], dtype=np.float64)
+
+
 class CameraInfo:
     def __init__(
             self,
             name: str,
             short_name: str,
-            aperture_f: float,
             focal_length_px: tuple[float, float],
-            resolutions: "Sequence[tuple[int, int]] | tuple[range, range] | Callable[[tuple[int, int]] | bool]",
             update_rate: "float | Callable[[BaseCamera], float]",
+            aperture_f: float = 2.8,
+            resolutions: "Sequence[tuple[int, int]] | tuple[range, range] | Callable[[tuple[int, int]] | bool]" = None,
             pixel_size_um: float = 1.0,
             hfov_deg: float = 90.0,
             focus_type: str = "Unknown",  # Literal["Fixed", "Autofocus", "Manual", "Unknown"]
@@ -67,13 +79,17 @@ class CameraInfo:
                 self._resolutions = resolutions
         elif isinstance(resolutions, Callable):
             raise ValueError("max_resolution must be provided when using a Callable for resolutions")
-        elif len(resolutions) > 0 and isinstance(resolutions[0], range):
+        elif resolutions and isinstance(resolutions[0], range):
             self.max_resolution = (resolutions[0][-1], resolutions[1][-1])
         else:
+            if not resolutions:
+                raise ValueError("max_resolution must be provided when resolutions is empty or None")
             self.max_resolution = max(resolutions, key=lambda r: r[0] * r[1], default=(0, 0))
         self._max_resolution = max_resolution
 
     def is_valid_resolution(self, resolution: tuple[int, int]) -> bool:
+        if self._resolutions is None:
+            return True
         if isinstance(self._resolutions, Callable):
             return self._resolutions(resolution)
         if isinstance(self._resolutions[0], range):
@@ -102,7 +118,10 @@ class BaseCamera(ABC):
         self.roll_deg = 0.0
         self.pitch_deg = 0.0
         self.yaw_deg = 0.0
-        self.offset = np.array([0.0, 0.0, -0.1], dtype=np.float64)
+        self.offset = np.array([0.0, 0.0, 0.0], dtype=np.float64)  # x right, y down, z forward (optical)
+        self.offset_roll = 0.0
+        self.offset_pitch = 0.0
+        self.offset_yaw = 0.0
         if isinstance(info, CameraInfo):
             self.info: "CameraInfo | None" = info
         elif isinstance(info, BaseCamera):
@@ -227,3 +246,44 @@ class BaseCamera(ABC):
         if isinstance(self, ReadonlyCamera):
             return self
         return ReadonlyCamera(self)
+
+    def project_pixel_to_ground(self, px, py, alt_m, roll, pitch, yaw):
+        width, height = self.size
+        fx, fy = self.focal_length
+
+        x_cam = (px - (width / 2.0)) / fx
+        y_cam = (py - (height / 2.0)) / fy
+        z_cam = 1.0
+
+        norm = sqrt(x_cam ** 2 + y_cam ** 2 + z_cam ** 2)
+        ray_cam = np.array([x_cam / norm, y_cam / norm, z_cam / norm])
+
+        ray_sensor = np.array([-ray_cam[1], ray_cam[0], ray_cam[2]])
+
+        cam_roll = radians(self.offset_roll)
+        cam_pitch = radians(self.offset_pitch)
+        cam_yaw = radians(self.offset_yaw)
+
+        cam_mount_body = _rot_matrix(cam_roll, cam_pitch, cam_yaw)
+        body_to_ned = _rot_matrix(roll, pitch, yaw)
+
+        ray_body = cam_mount_body @ ray_sensor
+        ray_ned = body_to_ned @ ray_body
+
+        if ray_ned[2] <= 1e-6:
+            return None
+
+        cam_offset_ned = body_to_ned @ self.offset
+
+        cam_height = alt_m - cam_offset_ned[2]
+        if cam_height <= 0:
+            return None
+
+        t = cam_height / ray_ned[2]
+        if t <= 0:
+            return None
+
+        north_m = cam_offset_ned[0] + (ray_ned[0] * t)
+        east_m = cam_offset_ned[1] + (ray_ned[1] * t)
+
+        return north_m, east_m
