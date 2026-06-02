@@ -1,4 +1,4 @@
-from typing import Optional, Tuple
+from typing import Optional
 
 import numpy as np
 
@@ -8,7 +8,7 @@ from .base_camera import BaseCamera
 class ScreenCapture(BaseCamera):
     # region: {"top": int, "left": int, "width": int, "height": int}
     def __init__(self, index=1, region: "dict[str, int] | None" = None, open=True,
-                 focal_length: Optional[Tuple[float, float]] = None):
+                 focal_length: Optional[tuple[float, float]] = None):
         try:
             import mss
             self.mss = mss
@@ -41,7 +41,7 @@ class ScreenCapture(BaseCamera):
             return self.region["width"], self.region["height"]
         return self.monitor["width"], self.monitor["height"]
 
-    def focal_length(self):
+    def _focal_length(self):
         if self._focal_length is None:
             raise ValueError("Focal length not set for ScreenCapture")
         return self._focal_length

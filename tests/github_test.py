@@ -1,6 +1,5 @@
 import sys
 import types
-from typing import Tuple
 
 import numpy as np
 import pytest
@@ -91,7 +90,7 @@ class DummyCamera(BaseCamera):
     def _size(self):
         return self._size_value
 
-    def _focus(self, rectangle: Tuple[int, int, int, int]):
+    def _focus(self, rectangle: tuple[int, int, int, int]):
         self.focus_calls.append(rectangle)
 
 
@@ -99,7 +98,7 @@ def test_camera_info_focal_length_scales():
     info = CameraInfo(
         name="Test",
         short_name="T",
-        focal_length_mm=(4.0, 4.0),
+        focal_length_px=(4.0, 4.0),
         pixel_size_um=2.0,
         max_resolution=(200, 100),
         aperture_f=2.0,
@@ -136,7 +135,7 @@ def test_base_camera_focus_restrictions():
     info = CameraInfo(
         name="Fixed",
         short_name="F",
-        focal_length_mm=(1.0, 1.0),
+        focal_length_px=(1.0, 1.0),
         pixel_size_um=1.0,
         max_resolution=(1, 1),
         aperture_f=1.0,
@@ -162,7 +161,7 @@ def test_readonly_camera_delegates_calls():
     readonly.open()
     assert cam._open_called is True
     assert readonly.read() == "frame"
-    assert readonly.size() == (640, 480)
+    assert readonly.size == (640, 480)
     readonly.focus((1, 2, 3, 4))
     assert cam.focus_calls == [(1, 2, 3, 4)]
     readonly.release()
@@ -174,7 +173,7 @@ def test_cv_camera_base_open_sets_frame_size(monkeypatch):
     monkeypatch.setitem(sys.modules, "cv2", fake_cv2)
     cam = CVCameraBase([0])
     cam.open()
-    assert cam.size() == (640, 480)
+    assert cam.size == (640, 480)
     frame = cam.read()
     assert isinstance(frame, np.ndarray)
     cam.release()

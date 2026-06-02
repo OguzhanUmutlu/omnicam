@@ -1,5 +1,3 @@
-from typing import Union
-
 from .base_camera import CameraInfo, BaseCamera
 from .cv_camera_base import CVCameraBase
 
@@ -26,7 +24,7 @@ class GStreamerCapture(CVCameraBase):
             return " ! ".join(self.elements)
 
     def __init__(self, gstreamer_string: "GstPipeline | str", timeout=5, open=True,
-                 info: Union[CameraInfo, BaseCamera] = None, open_error=None, timeout_error=None):
+                 info: "CameraInfo | BaseCamera | None" = None, open_error=None, timeout_error=None):
         try:
             import cv2
         except Exception as exc:

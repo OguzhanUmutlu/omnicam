@@ -101,7 +101,7 @@ from omnicam.base_camera import CameraInfo
 info = CameraInfo(
     name="My Camera Model",
     short_name="MYCAM",
-    focal_length_mm=(4.0, 4.0),
+    focal_length_px=(4.0, 4.0),
     pixel_size_um=1.4,
     max_resolution=(1920, 1080),
     aperture_f=2.0,
@@ -111,7 +111,7 @@ info = CameraInfo(
 )
 
 with SimpleCamera(index=0, info=info) as cam:
-    fx, fy = cam.focal_length()  # focal length in pixels at current size
+    fx, fy = cam.focal_length  # focal length in pixels at current size
 ```
 
 If you only know focal length in pixel units, use:

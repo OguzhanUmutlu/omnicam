@@ -1,12 +1,11 @@
 import platform
-from typing import Union
 
 from .base_camera import CameraInfo, BaseCamera
 from .cv_camera_base import CVCameraBase
 
 
 class SimpleCamera(CVCameraBase):
-    def __init__(self, index=0, open=True, info: Union[CameraInfo, BaseCamera] = None):
+    def __init__(self, index=0, open=True, info: "CameraInfo | BaseCamera | None" = None):
         try:
             import cv2
         except Exception as exc:
