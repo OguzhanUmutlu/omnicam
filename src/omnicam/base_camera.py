@@ -1,4 +1,5 @@
 from abc import abstractmethod, ABC
+from math import radians
 from typing import Literal, Tuple, Union
 
 import numpy as np
@@ -73,9 +74,10 @@ class BaseCamera(ABC):
         self.pitch_deg = 0.0
         self.yaw_deg = 0.0
         self.offset = np.array([0.0, 0.0, -0.1], dtype=np.float64)
-        self.info = info
         if isinstance(info, BaseCamera):
-            self.info = info.info
+            self.info: CameraInfo = info.info
+        elif isinstance(info, CameraInfo):
+            self.info: CameraInfo = info
 
         if open:
             self.open()
@@ -121,21 +123,38 @@ class BaseCamera(ABC):
             raise ValueError("CameraInfo must be provided to calculate focal length")
         return self.info.focal_length(self.size())
 
+    @property
     def width(self):
         return self.size()[0]
 
+    @property
     def height(self):
         return self.size()[1]
 
+    @property
     def aspect_ratio(self):
         w, h = self.size()
         return w / h if h != 0 else 0.0
 
+    @property
     def fx(self):
         return self.focal_length()[0]
 
+    @property
     def fy(self):
         return self.focal_length()[1]
+
+    @property
+    def cx(self):
+        return self.width / 2.0
+
+    @property
+    def cy(self):
+        return self.height / 2.0
+
+    @property
+    def horizontal_fov(self):
+        return radians(self.info.hfov_deg) if self.info is not None else 0.0
 
     def read(self):
         if self.closed:
