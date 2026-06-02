@@ -40,7 +40,7 @@ class CameraInfo:
             name: str,
             short_name: str,
             aperture_f: float,
-            focal_length_px: tuple[float, float],  # Base pixel focal length at max resolution
+            focal_length_px: tuple[float, float],
             resolutions: "Sequence[tuple[int, int]] | tuple[range, range] | Callable[[tuple[int, int]] | bool]",
             update_rate: "float | Callable[[BaseCamera], float]",
             pixel_size_um: float = 1.0,
@@ -77,8 +77,9 @@ class CameraInfo:
         if isinstance(self._resolutions, Callable):
             return self._resolutions(resolution)
         if isinstance(self._resolutions[0], range):
-            return (self._resolutions[0][0] <= resolution[0] <= self._resolutions[0][-1] and
-                    self._resolutions[1][0] <= resolution[1] <= self._resolutions[1][-1])
+            x_range, y_range = self._resolutions[0], self._resolutions[1]
+            return (x_range.start <= resolution[0] < x_range.stop and
+                    y_range.start <= resolution[1] < y_range.stop)
         return resolution in self._resolutions
 
     def focal_length(self, resolution: tuple[int, int]):

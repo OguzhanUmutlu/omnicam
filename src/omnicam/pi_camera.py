@@ -1,117 +1,145 @@
 from .base_camera import BaseCamera, resolutions, CameraInfo, calc_focal_length_px
 
 
+def _v1_v2_fps(camera: BaseCamera) -> float:
+    pixels = camera.width * camera.height
+    if pixels <= 640 * 480: return 90.0
+    if pixels <= 1280 * 720: return 60.0
+    if pixels <= 1920 * 1080: return 30.0
+    return 15.0
+
+
+def _v3_fps(camera: BaseCamera) -> float:
+    pixels = camera.width * camera.height
+    if pixels <= 640 * 480: return 120.0
+    if pixels <= 1280 * 720: return 100.0
+    if pixels <= 1920 * 1080: return 50.0
+    return 30.0
+
+
+def _hq_fps(camera: BaseCamera) -> float:
+    pixels = camera.width * camera.height
+    if pixels <= 1280 * 720: return 120.0
+    if pixels <= 1920 * 1080: return 50.0
+    if pixels <= 2028 * 1520: return 40.0
+    return 10.0
+
+
+_gs_fps = lambda camera: 120.0 if (camera.width * camera.height) <= 1280 * 720 else 60.0
+_ai_fps = lambda camera: 30.0 if (camera.width * camera.height) <= 1920 * 1080 else 10.0
+
+
 class PiCamera(BaseCamera):
     rpi_camera_definitions = [
         CameraInfo(
             name="Camera Module 1", short_name="OV5647",
             focal_length_px=calc_focal_length_px((3.60, 3.60), 1.40), pixel_size_um=1.40,
-            resolutions=[], max_resolution=(2592, 1944), update_rate=30.0,
+            resolutions=[], max_resolution=(2592, 1944), update_rate=_v1_v2_fps,
             aperture_f=2.9, hfov_deg=53.5, focus_type="Fixed", has_ir_filter=True
         ),
         CameraInfo(
             name="Camera Module 1 NoIR", short_name="OV5647 NoIR",
             focal_length_px=calc_focal_length_px((3.60, 3.60), 1.40), pixel_size_um=1.40,
-            resolutions=[], max_resolution=(2592, 1944), update_rate=30.0,
+            resolutions=[], max_resolution=(2592, 1944), update_rate=_v1_v2_fps,
             aperture_f=2.9, hfov_deg=53.5, focus_type="Fixed", has_ir_filter=False
         ),
         CameraInfo(
             name="Camera Module 2", short_name="IMX219",
             focal_length_px=calc_focal_length_px((3.04, 3.04), 1.12), pixel_size_um=1.12,
-            resolutions=[], max_resolution=(3280, 2464), update_rate=30.0,
+            resolutions=[], max_resolution=(3280, 2464), update_rate=_v1_v2_fps,
             aperture_f=2.0, hfov_deg=62.2, focus_type="Fixed", has_ir_filter=True
         ),
         CameraInfo(
             name="Camera Module 2 NoIR", short_name="IMX219 NoIR",
             focal_length_px=calc_focal_length_px((3.04, 3.04), 1.12), pixel_size_um=1.12,
-            resolutions=[], max_resolution=(3280, 2464), update_rate=30.0,
+            resolutions=[], max_resolution=(3280, 2464), update_rate=_v1_v2_fps,
             aperture_f=2.0, hfov_deg=62.2, focus_type="Fixed", has_ir_filter=False
         ),
         CameraInfo(
             name="Camera Module 3 - Standard", short_name="IMX708 Standard",
             focal_length_px=calc_focal_length_px((4.74, 4.74), 1.40), pixel_size_um=1.40,
-            resolutions=[], max_resolution=(4608, 2592), update_rate=30.0,
+            resolutions=[], max_resolution=(4608, 2592), update_rate=_v3_fps,
             aperture_f=1.8, hfov_deg=66.0, focus_type="Autofocus", has_ir_filter=True
         ),
         CameraInfo(
             name="Camera Module 3 - Standard NoIR", short_name="IMX708 NoIR",
             focal_length_px=calc_focal_length_px((4.74, 4.74), 1.40), pixel_size_um=1.40,
-            resolutions=[], max_resolution=(4608, 2592), update_rate=30.0,
+            resolutions=[], max_resolution=(4608, 2592), update_rate=_v3_fps,
             aperture_f=1.8, hfov_deg=66.0, focus_type="Autofocus", has_ir_filter=False
         ),
         CameraInfo(
             name="Camera Module 3 - Wide", short_name="IMX708 Wide",
             focal_length_px=calc_focal_length_px((2.75, 2.75), 1.40), pixel_size_um=1.40,
-            resolutions=[], max_resolution=(4608, 2592), update_rate=30.0,
+            resolutions=[], max_resolution=(4608, 2592), update_rate=_v3_fps,
             aperture_f=2.2, hfov_deg=102.0, focus_type="Autofocus", has_ir_filter=True
         ),
         CameraInfo(
             name="Camera Module 3 - Wide NoIR", short_name="IMX708 Wide NoIR",
             focal_length_px=calc_focal_length_px((2.75, 2.75), 1.40), pixel_size_um=1.40,
-            resolutions=[], max_resolution=(4608, 2592), update_rate=30.0,
+            resolutions=[], max_resolution=(4608, 2592), update_rate=_v3_fps,
             aperture_f=2.2, hfov_deg=102.0, focus_type="Autofocus", has_ir_filter=False
         ),
         CameraInfo(
             name="High Quality Camera w/ 6mm Lens", short_name="IMX477 6mm",
             focal_length_px=calc_focal_length_px((6.00, 6.00), 1.55), pixel_size_um=1.55,
-            resolutions=[], max_resolution=(4056, 3040), update_rate=30.0,
+            resolutions=[], max_resolution=(4056, 3040), update_rate=_hq_fps,
             aperture_f=1.2, hfov_deg=55.0, focus_type="Manual", has_ir_filter=True
         ),
         CameraInfo(
             name="High Quality Camera w/ 16mm Lens", short_name="IMX477 16mm",
             focal_length_px=calc_focal_length_px((16.00, 16.00), 1.55), pixel_size_um=1.55,
-            resolutions=[], max_resolution=(4056, 3040), update_rate=30.0,
+            resolutions=[], max_resolution=(4056, 3040), update_rate=_hq_fps,
             aperture_f=1.4, hfov_deg=22.2, focus_type="Manual", has_ir_filter=True
         ),
         CameraInfo(
             name="High Quality Camera w/ 35mm Lens", short_name="IMX477 35mm",
             focal_length_px=calc_focal_length_px((35.00, 35.00), 1.55), pixel_size_um=1.55,
-            resolutions=[], max_resolution=(4056, 3040), update_rate=30.0,
+            resolutions=[], max_resolution=(4056, 3040), update_rate=_hq_fps,
             aperture_f=1.7, hfov_deg=10.1, focus_type="Manual", has_ir_filter=True
         ),
         CameraInfo(
             name="High Quality Camera w/ 8mm M12 Lens", short_name="IMX477 M12-8mm",
             focal_length_px=calc_focal_length_px((8.00, 8.00), 1.55), pixel_size_um=1.55,
-            resolutions=[], max_resolution=(4056, 3040), update_rate=30.0,
+            resolutions=[], max_resolution=(4056, 3040), update_rate=_hq_fps,
             aperture_f=1.8, hfov_deg=49.0, focus_type="Manual", has_ir_filter=True
         ),
         CameraInfo(
             name="High Quality Camera w/ 25mm M12 Lens", short_name="IMX477 M12-25mm",
             focal_length_px=calc_focal_length_px((25.00, 25.00), 1.55), pixel_size_um=1.55,
-            resolutions=[], max_resolution=(4056, 3040), update_rate=30.0,
+            resolutions=[], max_resolution=(4056, 3040), update_rate=_hq_fps,
             aperture_f=2.4, hfov_deg=14.4, focus_type="Manual", has_ir_filter=True
         ),
         CameraInfo(
             name="High Quality Camera w/ 2.7mm M12 Fisheye", short_name="IMX477 M12-Fish",
             focal_length_px=calc_focal_length_px((2.70, 2.70), 1.55), pixel_size_um=1.55,
-            resolutions=[], max_resolution=(4056, 3040), update_rate=30.0,
+            resolutions=[], max_resolution=(4056, 3040), update_rate=_hq_fps,
             aperture_f=2.5, hfov_deg=140.0, focus_type="Manual", has_ir_filter=True
         ),
         CameraInfo(
             name="Global Shutter Camera w/ 6mm Lens", short_name="IMX296 6mm",
             focal_length_px=calc_focal_length_px((6.00, 6.00), 3.45), pixel_size_um=3.45,
-            resolutions=[], max_resolution=(1456, 1088), update_rate=60.0,  # Global shutter typical speed profile
+            resolutions=[], max_resolution=(1456, 1088), update_rate=_gs_fps,
             aperture_f=1.2, hfov_deg=45.0, focus_type="Manual", has_ir_filter=True
         ),
         CameraInfo(
             name="Global Shutter Camera w/ 16mm Lens", short_name="IMX296 16mm",
             focal_length_px=calc_focal_length_px((16.00, 16.00), 3.45), pixel_size_um=3.45,
-            resolutions=[], max_resolution=(1456, 1088), update_rate=60.0,
+            resolutions=[], max_resolution=(1456, 1088), update_rate=_gs_fps,
             aperture_f=1.4, hfov_deg=17.8, focus_type="Manual", has_ir_filter=True
         ),
         CameraInfo(
             name="Raspberry Pi AI Camera", short_name="IMX500",
             focal_length_px=calc_focal_length_px((4.74, 4.74), 1.55), pixel_size_um=1.55,
-            resolutions=[], max_resolution=(4056, 3040), update_rate=10.0,
-            # Throttled lower for onboard tensor processing pipelines
+            resolutions=[], max_resolution=(4056, 3040), update_rate=_ai_fps,
             aperture_f=1.79, hfov_deg=66.3, focus_type="Manual", has_ir_filter=True
         )
     ]
 
-    rpi_cameras = {}
-    for cam_info in rpi_camera_definitions:
-        rpi_cameras[cam_info.name] = cam_info
-        rpi_cameras[cam_info.short_name] = cam_info
+    rpi_cameras = {
+        key: cam_info
+        for cam_info in rpi_camera_definitions
+        for key in (cam_info.name, cam_info.short_name)
+    }
 
     def __init__(self, info: "str | CameraInfo | BaseCamera", resolution: "tuple[int, int] | str" = "720p",
                  open=True):
