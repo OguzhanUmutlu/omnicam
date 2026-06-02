@@ -189,6 +189,12 @@ class BaseCamera(ABC):
         return self.height / 2.0
 
     @property
+    def update_rate(self):
+        if self.info is None:
+            raise ValueError("Camera info is not set, cannot determine update rate.")
+        return self.info.update_rate(self)
+
+    @property
     def horizontal_fov(self):
         return radians(self.info.hfov_deg) if self.info is not None else 0.0
 
