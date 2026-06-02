@@ -178,6 +178,7 @@ class BaseCamera(ABC):
     def open(self):
         if not self.closed:
             raise PermissionError("Attempted to open an already open camera.")
+        self.closed = False
         self._open()
         return self
 
