@@ -127,6 +127,10 @@ class BaseCamera(ABC):
     def height(self):
         return self.size()[1]
 
+    def aspect_ratio(self):
+        w, h = self.size()
+        return w / h if h != 0 else 0.0
+
     def fx(self):
         return self.focal_length()[0]
 
