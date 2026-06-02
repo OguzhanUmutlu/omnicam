@@ -175,8 +175,8 @@ class BaseCamera(ABC):
         return self.info.focal_length(self.size)
 
     def open(self):
-        if self.closed:
-            raise PermissionError("Attempted to open a closed camera.")
+        if not self.closed:
+            raise PermissionError("Attempted to open an already open camera.")
         self._open()
         return self
 
