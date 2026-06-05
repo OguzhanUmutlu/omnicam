@@ -4,7 +4,7 @@ from .base_camera import BaseCamera
 class ReadonlyCamera(BaseCamera):
     def __init__(self, cam: BaseCamera):
         self.cam = cam
-        super().__init__()
+        super().__init__(info=cam.info)
 
     def _open(self):
         pass
