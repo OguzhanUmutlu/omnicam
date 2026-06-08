@@ -10,14 +10,10 @@ class GazeboCamera(GStreamerCapture):
         self.topic_name = topic_name
         self.port = port
         super().__init__(
-            GStreamerCapture.GstPipeline()
-            .add("udpsrc", port=self.port)
-            .add_caps("application/x-rtp")
-            .add("rtph264depay")
-            .add("h264parse")
-            .add("avdec_h264")
-            .add("videoconvert")
-            .add("appsink", sync="false"),
+            f"udpsrc port={self.port} ! "
+            "application/x-rtp, media=video, clock-rate=90000, encoding-name=H264 ! "
+            "rtph264depay ! h264parse ! avdec_h264 ! videoconvert ! "
+            "appsink sync=false drop=true max-buffers=1",
             timeout=timeout, open=open, info=info,
             open_error=open_error or ValueError(f"Could not open Gazebo camera stream on port {self.port}"),
             timeout_error=timeout_error or TimeoutError(
