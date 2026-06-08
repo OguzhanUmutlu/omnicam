@@ -122,7 +122,7 @@ intrinsics.
 Fields:
 
 - `name`: Full model name.
-- `short_name`: Short identifier (sensor/model code).
+- `short_names`: Short identifiers (sensor/model code).
 - `focal_length_mm`: `(fx_mm, fy_mm)` in millimeters.
 - `pixel_size_um`: Pixel size in micrometers.
 - `max_resolution`: `(width, height)` at sensor maximum.
@@ -170,23 +170,23 @@ info = CameraInfo(
 
 Default Raspberry Pi cameras (short name → full name):
 
-- `OV5647` → `Camera Module 1`
-- `OV5647 NoIR` → `Camera Module 1 NoIR`
-- `IMX219` → `Camera Module 2`
-- `IMX219 NoIR` → `Camera Module 2 NoIR`
-- `IMX708 Standard` → `Camera Module 3 - Standard`
-- `IMX708 NoIR` → `Camera Module 3 - Standard NoIR`
-- `IMX708 Wide` → `Camera Module 3 - Wide`
-- `IMX708 Wide NoIR` → `Camera Module 3 - Wide NoIR`
-- `IMX477 6mm` → `High Quality Camera w/ 6mm Lens`
-- `IMX477 16mm` → `High Quality Camera w/ 16mm Lens`
-- `IMX477 35mm` → `High Quality Camera w/ 35mm Lens`
-- `IMX477 M12-8mm` → `High Quality Camera w/ 8mm M12 Lens`
-- `IMX477 M12-25mm` → `High Quality Camera w/ 25mm M12 Lens`
-- `IMX477 M12-Fish` → `High Quality Camera w/ 2.7mm M12 Fisheye`
-- `IMX296 6mm` → `Global Shutter Camera w/ 6mm Lens`
-- `IMX296 16mm` → `Global Shutter Camera w/ 16mm Lens`
-- `IMX500` → `Raspberry Pi AI Camera`
+- `OV5647`, `1` → `Camera Module 1`
+- `OV5647 NoIR`, `1N` → `Camera Module 1 NoIR`
+- `IMX219`, `2` → `Camera Module 2`
+- `IMX219 NoIR`, `2N` → `Camera Module 2 NoIR`
+- `IMX708 Standard`, `3` → `Camera Module 3 - Standard`
+- `IMX708 NoIR`, `3N` → `Camera Module 3 - Standard NoIR`
+- `IMX708 Wide`, `3W` → `Camera Module 3 - Wide`
+- `IMX708 Wide NoIR`, `3WN` → `Camera Module 3 - Wide NoIR`
+- `IMX477 6mm`, `HQ6` → `High Quality Camera w/ 6mm Lens`
+- `IMX477 16mm`, `HQ16` → `High Quality Camera w/ 16mm Lens`
+- `IMX477 35mm`, `HQ35` → `High Quality Camera w/ 35mm Lens`
+- `IMX477 M12-8mm`, `HQ8` → `High Quality Camera w/ 8mm M12 Lens`
+- `IMX477 M12-25mm`, `HQ25` → `High Quality Camera w/ 25mm M12 Lens`
+- `IMX477 M12-Fish`, `HQ2.7` → `High Quality Camera w/ 2.7mm M12 Fisheye`
+- `IMX296 6mm`, `HQ6` → `Global Shutter Camera w/ 6mm Lens`
+- `IMX296 16mm`, `HQ16` → `Global Shutter Camera w/ 16mm Lens`
+- `IMX500`, `PiAI` → `Raspberry Pi AI Camera`
 
 ## Notes
 

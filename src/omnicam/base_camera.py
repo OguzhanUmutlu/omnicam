@@ -1,7 +1,8 @@
 from abc import abstractmethod, ABC
+from argparse import ArgumentError
 from collections.abc import Callable
 from math import radians, cos, sin, sqrt, atan
-from typing import Sequence, Optional
+from typing import Sequence, Optional, Union
 
 import numpy as np
 
@@ -68,7 +69,6 @@ class CameraInfo:
     def __init__(
             self,
             name: str,
-            short_name: str,
             focal_length_px: tuple[float, float],
             update_rate: "float | Callable[[BaseCamera], float]",
             aperture_f: float = 2.8,
@@ -77,10 +77,17 @@ class CameraInfo:
             hfov_deg: float = 90.0,
             focus_type: str = "Unknown",  # Literal["Fixed", "Autofocus", "Manual", "Unknown"]
             has_ir_filter: bool = False,
-            max_resolution: Optional[tuple[int, int]] = None
+            max_resolution: Optional[tuple[int, int]] = None,
+            short_names: Union[str, list[str], None] = None,
+            short_name: Optional[str] = None
     ):
         self.name = name
-        self.short_name = short_name
+        if short_name:
+            short_names = [short_name]
+        if short_names is None:
+            raise ArgumentError("Either short_name or short_names must be provided")
+        self.short_names: list[str] = [short_names] if isinstance(short_names, str) else short_names
+        self.short_name = short_names[0]
         self.aperture_f = aperture_f
         self._resolutions = resolutions
         self._update_rate = update_rate
