@@ -29,6 +29,9 @@ class GazeboCamera(GStreamerCapture):
             GazeboCamera.start_gz_stream(self.topic_name)
         super()._open()
 
+    def enable(self):
+        GazeboCamera.start_gz_stream(topic_name=self.topic_name)
+
     @staticmethod
     def start_gz_stream(topic_name):
         subprocess.run([
