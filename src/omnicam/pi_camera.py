@@ -138,7 +138,7 @@ class PiCamera(BaseCamera):
     rpi_cameras = {
         key: cam_info
         for cam_info in rpi_camera_definitions
-        for key in (cam_info.name, cam_info.short_name)
+        for key in (cam_info.name, *cam_info.short_names)
     }
 
     def __init__(self, info: "str | CameraInfo | BaseCamera", resolution: "tuple[int, int] | str" = "720p",
