@@ -264,7 +264,8 @@ class BaseCamera(ABC):
             yield frame
 
     def __enter__(self):
-        self.open()
+        if self.closed:
+            self.open()
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
