@@ -116,13 +116,13 @@ class PiCamera(BaseCamera):
             aperture_f=2.5, hfov_deg=140.0, focus_type="Manual", has_ir_filter=True
         ),
         CameraInfo(
-            name="Global Shutter Camera w/ 6mm Lens", short_names=["IMX296 6mm", "HQ6"],
+            name="Global Shutter Camera w/ 6mm Lens", short_names=["IMX296 6mm", "GS6"],
             focal_length_px=calc_focal_length_px((6.00, 6.00), 3.45), pixel_size_um=3.45,
             resolutions=[], max_resolution=(1456, 1088), update_rate=_gs_fps,
             aperture_f=1.2, hfov_deg=45.0, focus_type="Manual", has_ir_filter=True
         ),
         CameraInfo(
-            name="Global Shutter Camera w/ 16mm Lens", short_names=["IMX296 16mm", "HQ16"],
+            name="Global Shutter Camera w/ 16mm Lens", short_names=["IMX296 16mm", "GS16"],
             focal_length_px=calc_focal_length_px((16.00, 16.00), 3.45), pixel_size_um=3.45,
             resolutions=[], max_resolution=(1456, 1088), update_rate=_gs_fps,
             aperture_f=1.4, hfov_deg=17.8, focus_type="Manual", has_ir_filter=True
